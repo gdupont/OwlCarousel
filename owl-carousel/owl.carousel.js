@@ -1177,38 +1177,47 @@ if (typeof Object.create !== "function") {
                 iterations = 0,
                 isBackgroundImg;
 
-            if ($lazyImg.prop("tagName") === "DIV") {
-                $lazyImg.css("background-image", "url(" + $lazyImg.data("src") + ")");
-                isBackgroundImg = true;
-            } else {
-                $lazyImg[0].src = $lazyImg.data("src");
-            }
 
-            function showImage() {
-                $item.data("owl-loaded", "loaded").removeClass("loading");
-                $lazyImg.removeAttr("data-src");
-                if (base.options.lazyEffect === "fade") {
-                    $lazyImg.fadeIn(400);
+            $lazyImg.each( function( index, img ) {
+
+                var $img = $(img);
+
+                if ($img.prop("tagName") === "DIV") {
+                    $img.css("background-image", "url(" + $img.data("src") + ")");
+                    isBackgroundImg = true;
                 } else {
-                    $lazyImg.show();
+                    $img.src = $img.data("src");
+                }
+
+                checkLazyImage( $img );
+
+            });
+
+
+            function showImage( $img ) {
+                $item.data("owl-loaded", "loaded").removeClass("loading");
+                $img.removeAttr("data-src");
+                if (base.options.lazyEffect === "fade") {
+                    $img.fadeIn(400);
+                } else {
+                    $img.show();
                 }
                 if (typeof base.options.afterLazyLoad === "function") {
                     base.options.afterLazyLoad.apply(this, [base.$elem]);
                 }
             }
 
-            function checkLazyImage() {
+            function checkLazyImage( $img ) {
                 iterations += 1;
-                if (base.completeImg($lazyImg.get(0)) || isBackgroundImg === true) {
+                if (base.completeImg($img.get(0)) || isBackgroundImg === true) {
                     showImage();
-                } else if (iterations <= 100) {//if image loads in less than 10 seconds 
+                } else if (iterations <= 100) {//if image loads in less than 10 seconds
                     window.setTimeout(checkLazyImage, 100);
                 } else {
-                    showImage();
+                    showImage( $img );
                 }
             }
 
-            checkLazyImage();
         },
 
         autoHeight : function () {
@@ -1230,7 +1239,7 @@ if (typeof Object.create !== "function") {
                 iterations += 1;
                 if (base.completeImg($currentimg.get(0))) {
                     addHeight();
-                } else if (iterations <= 100) { //if image loads in less than 10 seconds 
+                } else if (iterations <= 100) { //if image loads in less than 10 seconds
                     window.setTimeout(checkImage, 100);
                 } else {
                     base.wrapperOuter.css("height", ""); //Else remove height attribute
