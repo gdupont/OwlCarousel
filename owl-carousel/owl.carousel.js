@@ -1186,7 +1186,7 @@ if (typeof Object.create !== "function") {
                     $img.css("background-image", "url(" + $img.data("src") + ")");
                     isBackgroundImg = true;
                 } else {
-                    $img.src = $img.data("src");
+                    $img.prop('src', $img.data("src"));
                 }
 
                 checkLazyImage( $img );
