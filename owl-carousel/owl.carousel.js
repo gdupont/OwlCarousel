@@ -1212,7 +1212,9 @@ if (typeof Object.create !== "function") {
                 if (base.completeImg($img.get(0)) || isBackgroundImg === true) {
                     showImage( $img );
                 } else if (iterations <= 100) {//if image loads in less than 10 seconds
-                    window.setTimeout(checkLazyImage($img) , 100);
+                    window.setTimeout(function() {
+                    	checkLazyImage($img);
+                    }, 100);
                 } else {
                     showImage( $img );
                 }
